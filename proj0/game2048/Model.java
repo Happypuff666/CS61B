@@ -114,12 +114,73 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        Board b = this.board;
+        b.setViewingPerspective(side);
+        int size=b.size();
+
+        for(int col=0;col<size;col++) {
+            if(rowmove(b,col))
+                changed=true;
+        }
+        b.setViewingPerspective(Side.NORTH);
+
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
+
+    private boolean rowmove(Board b,int col){
+        int size=b.size();
+        boolean change=false;
+        int[] ismerged=new int[size];
+
+        for(int index=size-1;index>=0;index--){
+            Tile t=b.tile(col,index);
+            if(t==null)
+                continue;
+
+            int countnull=0;
+            int j=index;
+            while(j<size-1&&b.tile(col,j+1)==null) {
+                j++;
+                countnull++;
+            }//获取上方第一个不为null的tile
+
+            if(countnull==0&&index+1>size-1)
+                continue;
+            else if(countnull==0&&index+1<=size-1){
+                if(b.tile(col, index + 1).value()==t.value()) {
+                    b.move(col, index + 1, t);
+                    this.score += 2*t.value();
+                    change = true;
+                    ismerged[index +1]=1;
+                }
+            }
+            else if(countnull!=0) {
+                if(index + countnull+1<size&&b.tile(col, index + countnull+1).value()==t.value()) {
+                    if(ismerged[index + countnull+1]==1){
+                        b.move(col, index + countnull, t);
+                    }
+                    else {
+                        this.score += 2 * t.value();
+                        b.move(col, index + countnull + 1, t);
+                        change = true;
+                        ismerged[index + countnull + 1] = 1;
+                    }
+                }
+                else {
+                    b.move(col, index + countnull, t);
+                    change = true;
+                }
+            }
+
+        }
+        return change;
+
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -141,8 +202,8 @@ public class Model extends Observable {
         int size=b.size();
         for(int col=0;col<size;col++){
             for(int row=0;row<size;row++){
-                Tile value=b.tile(col,row);
-                if(value==null)
+                Tile t=b.tile(col,row);
+                if(t==null)
                     return true;
             }
         }
@@ -157,6 +218,14 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int size=b.size();
+        for(int col=0;col<size;col++){
+            for(int row=0;row<size;row++){
+                Tile t=b.tile(col,row);
+                if(t!=null&&t.value()==MAX_PIECE)
+                    return true;
+            }
+        }
         return false;
     }
 
@@ -168,6 +237,33 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b))
+            return true;
+        int size=b.size();
+
+        for(int col=0;col<size-1;col++)
+        {
+            for(int row=0;row<size;row++){
+                Tile t=b.tile(col,row);
+                Tile t_col=b.tile(col+1,row);
+                if(t.value()==t_col.value()) {
+                    return true;
+                }
+            }
+        }
+
+        for(int col=0;col<size;col++)
+        {
+            for(int row=0;row<size-1;row++){
+                Tile t=b.tile(col,row);
+                Tile t_row=b.tile(col,row+1);
+                if(t.value()==t_row.value()) {
+                    return true;
+                }
+            }
+        }
+
+
         return false;
     }
 
