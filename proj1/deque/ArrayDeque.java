@@ -1,6 +1,6 @@
 package deque;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     private int size;
     private int first, last;
@@ -15,6 +15,7 @@ public class ArrayDeque<T> {
 
     }
 
+    @Override
     public void addFirst(T item) {
         if (size == this.items.length) {
             resize(size * 2);
@@ -24,6 +25,7 @@ public class ArrayDeque<T> {
         size++;
     }
 
+    @Override
     public void addLast(T item) {
         if (size == this.items.length) {
             resize(size * 2);
@@ -33,14 +35,12 @@ public class ArrayDeque<T> {
         size++;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public void printDeque() {
         if (adjust(first) >= adjust(last) && size != 0) {
             for (int i = adjust(first); i < items.length; i++) {
@@ -57,6 +57,7 @@ public class ArrayDeque<T> {
         System.out.println();
     }
 
+    @Override
     public T removeFirst() {
         T target = items[adjust(first)];
         if (size == 0) {
@@ -71,6 +72,7 @@ public class ArrayDeque<T> {
         return target;
     }
 
+    @Override
     public T removeLast() {
         T target = items[adjust(last - 1)];
         if (size == 0) {
@@ -85,6 +87,7 @@ public class ArrayDeque<T> {
         return target;
     }
 
+    @Override
     public T get(int index) {
         return items[adjust(adjust(first) + index)];
     }
@@ -114,12 +117,17 @@ public class ArrayDeque<T> {
     }
 
     private int adjust(int target) {
+        int result;
         if (target >= 0 && target < items.length) {
-            return target;
+            result = target;
         } else if (target >= items.length) {
-            return target - items.length;
+            result =  target - items.length;
         } else {
-            return items.length + target;
+            result = items.length + target;
         }
+        if (result >= items.length || result < 0) {
+            result = adjust(result);
+        }
+        return result;
     }
 }

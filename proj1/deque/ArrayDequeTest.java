@@ -7,7 +7,7 @@ public class ArrayDequeTest {
     // 测试多次添加和删除操作
     @Test
     public void testMultipleAddAndRemove() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        Deque<Integer> deque = new ArrayDeque<>();
         deque.addFirst(10);
         deque.addLast(20);
         deque.addFirst(5);
@@ -30,7 +30,7 @@ public class ArrayDequeTest {
     // 测试循环数组的情况：前端和后端交替添加
     @Test
     public void testCircularArrayBehavior() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        Deque<Integer> deque = new ArrayDeque<>();
 
         // 添加足够的元素，触发数组循环行为
         deque.addLast(10); // 队列: [10]
@@ -61,7 +61,7 @@ public class ArrayDequeTest {
     // 测试动态调整大小：数组大小变化
     @Test
     public void testResizeArray() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        Deque<Integer> deque = new ArrayDeque<>();
 
         // 向Deque中添加大量元素，测试数组扩展
         for (int i = 0; i < 1000; i++) {
@@ -85,7 +85,7 @@ public class ArrayDequeTest {
     // 测试边界情况：添加和删除后边界
     @Test
     public void testBoundaryRemoval() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        Deque<Integer> deque = new ArrayDeque<>();
         deque.addFirst(10);
         deque.addFirst(20);
 
@@ -110,7 +110,7 @@ public class ArrayDequeTest {
     // 测试性能：快速测试大量操作
     @Test(timeout = 1000)  // 如果运行时间超过1秒则测试失败
     public void testPerformance() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        Deque<Integer> deque = new ArrayDeque<>();
         for (int i = 0; i < 100000; i++) {
             deque.addLast(i);
         }
